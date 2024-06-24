@@ -1,0 +1,38 @@
+/* src/Dice.css */
+
+/* have two different styles for dice, one if odd then it should be black and if even then red */
+
+.dice-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+}
+
+.odd {
+  color: black;
+}
+
+.even {
+  color: red;
+}
+
+.die.rolling {
+    transform: rotate(360deg);
+}
+
+.dice-wrapper {
+    display: inline-block;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.dice-wrapper.selected {
+    border: 1px solid yellow;
+    transform: scale();
+    box-shadow: 0 0 5px yellow;
+}
+
+.dice-click-area {
+    pointer-events: none; /* Disable pointer events on the dice area */
+}
