@@ -6,6 +6,7 @@ const DiceComponent = ({ dice }) => {
     const reactDiceRefs = useRef([]);
     const [selectedDice, setSelectedDice] = useState([]);
     const [diceValues, setDiceValues] = useState(Array(dice.length).fill(1)); // State to hold dice values
+    const [diceRollTimes, setDiceRollTimes] = useState(Array(dice.length).fill(2)); // State to hold dice roll times [optional
     const [dotColors, setDotColors] = useState(Array(dice.length).fill('white')); // State to hold dot colors
 
     const handleDiceClick = (index, event) => {
@@ -37,6 +38,11 @@ const DiceComponent = ({ dice }) => {
         selectedDice.forEach((index) => {
             reactDiceRefs.current[index].rollAll();
         });
+        setSelectedDice([]);
+    };
+
+    const rollAllDice = () => {
+        reactDiceRefs.current.forEach((ref) => ref.rollAll());
     };
 
     return (
@@ -62,7 +68,14 @@ const DiceComponent = ({ dice }) => {
                     </div>
                 </div>
             ))}
-            <button onClick={rollSelected}>Roll Selected Dice</button>
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}> {/* Ensure vertical alignment */}
+                <div style={{ marginBottom: '10px' }}> {/* Add space below the first button */}
+                    <button onClick={rollSelected}>Roll Selected Dice</button>
+                </div>
+                <div>
+                    <button onClick={rollAllDice}>Roll All Dice</button>
+                </div>
+            </div>
         </div>
     );
 };

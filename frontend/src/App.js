@@ -1,4 +1,3 @@
-// src/App.js
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import DiceComponent from './Dice';
@@ -7,22 +6,17 @@ import './App.css';
 const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
 
 function App() {
-    const [dice, setDice] = useState([1, 1, 1, 1, 1]); // Default values for initial render
+    const [dice, setDice] = useState([1, 1, 1, 1, 1]);
     const [isRolling, setIsRolling] = useState(false);
     const [games, setGames] = useState([]);
 
-    const rollDice = async () => {
-        setIsRolling(true);
+    const saveGameState = async (newDice) => {
         try {
-            const response = await axios.get(`${API_BASE_URL}/roll-dice`);
-            setTimeout(() => {
-                setDice(response.data.dice);
-                setIsRolling(false);
-                fetchGames();
-            }, 1000); // Duration of the animation
+            // Example: Saving game state after rolling dice
+            await axios.post(`${API_BASE_URL}/save-game-state`, { dice: newDice });
+            fetchGames(); // Refresh game history after saving state
         } catch (error) {
-            console.error('Error rolling dice', error);
-            setIsRolling(false);
+            console.error('Error saving game state:', error);
         }
     };
 
@@ -42,12 +36,11 @@ function App() {
     return (
         <div className="App">
             <h1>Yamslam</h1>
-            <button onClick={rollDice} disabled={isRolling}>Roll Dice</button>
             <DiceComponent dice={dice} isRolling={isRolling} />
             <h2>Game History</h2>
             <ul>
                 {games.map((game) => (
-                    <li key={game.id}>{game.dice}</li>
+                    <li key={game.id}>{game.dice.join(', ')}</li>
                 ))}
             </ul>
         </div>
