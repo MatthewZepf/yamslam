@@ -20,6 +20,13 @@ function App() {
         }
     };
 
+    const sortDice = () => {
+        setDice((prevValues) => {
+            const sortedValues = [...prevValues].sort((a, b) => a - b);
+            return sortedValues;
+        });
+    };
+
     const fetchGames = async () => {
         try {
             const response = await axios.get(`${API_BASE_URL}/games`);
@@ -35,14 +42,23 @@ function App() {
 
     return (
         <div className="App">
-            <h1>Yamslam</h1>
+            <div className="App-header">
+                Yamslam
+            </div>
+            <div className="App-body">
             <DiceComponent dice={dice} isRolling={isRolling} />
+            <button onClick={sortDice}>Sort Dice</button>
             <h2>Game History</h2>
             <ul>
                 {games.map((game) => (
                     <li key={game.id}>{game.dice.join(', ')}</li>
                 ))}
             </ul>
+            </div>
+            <div className="App-footer">
+                <div>Developed by Matthew Zepf</div>
+                <div>Questions? Create an issue at <a href="https://github.com/mzepf">this github</a> or email at <a href="mailto:mzepf@umich.edu">this email</a></div>
+            </div>
         </div>
     );
 }

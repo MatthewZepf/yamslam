@@ -29,7 +29,7 @@ const DiceComponent = ({ dice }) => {
 
         setDotColors((prevColors) => {
             const newColors = [...prevColors];
-            newColors[index] = value % 2 === 0 ? 'red' : 'white';
+            newColors[index] = value % 2 === 0 ? '#8b4513' : 'white';
             return newColors;
         });
     };
@@ -43,6 +43,7 @@ const DiceComponent = ({ dice }) => {
 
     const rollAllDice = () => {
         reactDiceRefs.current.forEach((ref) => ref.rollAll());
+        setSelectedDice([]);
     };
 
     return (
