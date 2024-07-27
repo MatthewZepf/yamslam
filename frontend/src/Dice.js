@@ -1,12 +1,12 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import ReactDice from 'react-dice-complete';
 import './Dice.css'; // Assuming you have your custom styles here
 
 const DiceComponent = ({ dice }) => {
     const reactDiceRefs = useRef([]);
     const [selectedDice, setSelectedDice] = useState([]);
-    const [diceValues, setDiceValues] = useState(Array(dice.length).fill(1)); // State to hold dice values
-    const [diceRollTimes, setDiceRollTimes] = useState(Array(dice.length).fill(2)); // State to hold dice roll times [optional
+    // set the roll time array to be 1, 1.5, 2, 2.5, 3 seconds
+    const rollTimes = [1, 1.5, 2, 2.5, 3];
     const [dotColors, setDotColors] = useState(Array(dice.length).fill('white')); // State to hold dot colors
 
     const handleDiceClick = (index, event) => {
@@ -21,15 +21,10 @@ const DiceComponent = ({ dice }) => {
     };
 
     const rollDone = (index, value) => {
-        setDiceValues((prevValues) => {
-            const newValues = [...prevValues];
-            newValues[index] = value;
-            return newValues;
-        });
 
         setDotColors((prevColors) => {
             const newColors = [...prevColors];
-            newColors[index] = value % 2 === 0 ? '#8b4513' : 'white';
+            newColors[index] = value % 2 === 0 ? '#483c32' : 'white';
             return newColors;
         });
     };
@@ -46,6 +41,26 @@ const DiceComponent = ({ dice }) => {
         setSelectedDice([]);
     };
 
+    const setDiceToValues = (values) => {
+        values.forEach((value, index) => {
+            reactDiceRefs.current[index].rollAll(value);
+        });
+    }
+
+    const rollDiceSequentially = async () => {
+        for (let i = 0; i < reactDiceRefs.current.length; i++) {
+            reactDiceRefs.current[i].rollAll();
+            await new Promise((resolve) => setTimeout(resolve, rollTimes[i] * 1000)); // Wait for the roll time
+        }
+    };
+
+    // call setDiceToValues with all 6's on mount
+    // must be an array of arrays like [6], [6], [6], [6], [ 
+    useEffect(() => {
+        setDiceToValues([[6], [6], [6], [6], [6]]);
+    }, []);
+
+
     return (
         <div className="dice-container">
             {dice.map((die, index) => (
@@ -61,7 +76,7 @@ const DiceComponent = ({ dice }) => {
                             rollDone={(value) => rollDone(index, value)}
                             size={60}
                             margin={15}
-                            rollTime={2}
+                            rollTime={rollTimes[index]}
                             faceColor="#000000"
                             dotColor={dotColors[index]}
                             disableIndividual={true} // Disable individual dice rolling on click
@@ -75,6 +90,7 @@ const DiceComponent = ({ dice }) => {
                 </div>
                 <div>
                     <button onClick={rollAllDice}>Roll All Dice</button>
+                    <button onClick={rollDiceSequentially}>Roll Dice Sequentially</button>
                 </div>
             </div>
         </div>
