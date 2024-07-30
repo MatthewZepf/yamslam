@@ -27,13 +27,15 @@ function App() {
     };
 
     const handleChipClick = (id) => {
-        setChips((prevChips) => {
-            const index = prevChips.findIndex((chip) => chip.id === id);
-            const newChips = [...prevChips];
-            const [movedChip] = newChips.splice(index, 1);
-            newChips.push(movedChip);
-            return newChips;
-        });
+        console.log('here');
+        console.log(API_BASE_URL);
+        axios.get(`${API_BASE_URL}/api/board/chip-options`, { params: { 'dice[]': dice } })
+            .then((response) => {
+                console.log(response.data);
+            })
+            .catch((error) => {
+                console.error('Error fetching chip options:', error);
+            });
     };
     
 
@@ -63,6 +65,7 @@ function App() {
                     <li key={game.id}>{game.dice.join(', ')}</li>
                 ))}
             </ul>
+            <button onClick={handleChipClick}>handle chip click</button>
             <div className="chip-stack">
                 {chips.map((chip, index) => (
                     <Chip
