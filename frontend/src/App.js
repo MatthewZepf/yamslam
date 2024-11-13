@@ -48,6 +48,10 @@ function App() {
         }
     };
 
+    const updateDiceValues = (newDice) => {
+        setDice(newDice);
+    };
+
     useEffect(() => {
         fetchGames();
     }, []);
@@ -58,7 +62,7 @@ function App() {
                 Yamslam
             </div>
             <div className="App-body">
-            <DiceComponent dice={dice} isRolling={isRolling} />
+            <DiceComponent dice={dice} isRolling={isRolling} updateDiceValues={updateDiceValues} />
             <h2>Game History</h2>
             <ul>
                 {games.map((game) => (
@@ -80,7 +84,7 @@ function App() {
             </div>
             <div className="App-footer">
                 <div>Developed by Matthew Zepf</div>
-                <div>Questions? Create an issue at <a href="https://github.com/mzepf">this github</a> or email at <a href="mailto:mzepf@umich.edu">this email</a></div>
+                <div className="footer-links">Questions? Create an issue at <a href="https://github.com/MatthewZepf/yamslam">this github</a> or email at <a href="mailto:mzepf@umich.edu">this email</a></div>
             </div>
         </div>
     );

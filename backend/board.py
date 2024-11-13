@@ -17,13 +17,15 @@ class Board:
     def get_chip_options(self, dice):
         # return the possible chip options for the current dice
         ans = []
+        # convert dice from strings to ints
+        dice = [int(i) for i in dice]
         dice = sorted(dice)
         dice_set = set(dice)
 
         if (len(dice_set) == 1):
             # YAMSLAMM
             # append all chips in the board
-            ans.append(self.chips)
+            ans = self.chips
         
         elif (len(dice_set) == 2):
             # 4 of a kind or full house
@@ -84,6 +86,12 @@ class Board:
         if (odd_count == 5 or even_count == 5):
             ans.append(self.chips[3])
 
-
-     
-        return ans
+        # return best option followed by value, i.e. [small straight, 30]
+        dict_values = {"5": "two pairs", "10": "three of a kind", "20": "small straight", "25": "flush", "30": "full house", "40": "four of a kind", "50": "large straight", "100": "YAMSLAMM"}
+        # return a dict with the highest value and name of that chip
+        if (len(ans) == 0):
+            return {"value": 0, "name": "nothing"}
+        elif ans == self.chips:
+            return {"value": 100, "name": "YAMSLAM"}
+        max_val = max(chip.val for chip in ans)
+        return {"value": max_val, "name": dict_values[str(max_val)]}

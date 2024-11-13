@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import ReactDice from 'react-dice-complete';
 import './Dice.css'; // Assuming you have your custom styles here
 
-const DiceComponent = ({ dice }) => {
+const DiceComponent = ({ dice, updateDiceValues }) => {
     const reactDiceRefs = useRef([]);
     const [selectedDice, setSelectedDice] = useState([]);
     // set the roll time array to be 1, 1.5, 2, 2.5, 3 seconds
@@ -21,10 +21,13 @@ const DiceComponent = ({ dice }) => {
     };
 
     const rollDone = (index, value) => {
+        const newDice = [...dice];
+        newDice[index] = value;
+        updateDiceValues(newDice);
 
         setDotColors((prevColors) => {
             const newColors = [...prevColors];
-            newColors[index] = value % 2 === 0 ? '#483c32' : 'white';
+            newColors[index] = value % 2 === 0 ? 'red' : 'white';
             return newColors;
         });
     };
