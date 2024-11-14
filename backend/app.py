@@ -22,10 +22,11 @@ def set_players():
 @app.route('/api/board/chip-options', methods=['GET'])
 def get_chip_options():
     dice = request.args.getlist('dice[]')
-    # print(dice)
     jsonified = jsonify(Bd.get_chip_options(dice))
-    # print(jsonified)
     return jsonified
 
+
+'''
 if __name__ == '__main__':
     app.run(debug=True)
+'''
