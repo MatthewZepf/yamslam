@@ -19,6 +19,7 @@ class Board:
         ans = []
         # convert dice from strings to ints
         dice = [int(i) for i in dice]
+        print(dice)
         dice = sorted(dice)
         dice_set = set(dice)
 
@@ -29,10 +30,11 @@ class Board:
         
         elif (len(dice_set) == 2):
             # 4 of a kind or full house
-            if (dice[0] == dice[1] and dice[2] == dice[3]):
-                ans.append(self.chips[5])
-            else:
-                ans.append(self.chips[4])
+            dice_counts = {x: dice.count(x) for x in set(dice)}
+            if 4 in dice_counts.values():
+                ans.append(self.chips[5])  # 4 of a kind
+            elif sorted(dice_counts.values()) == [2, 3]:
+                ans.append(self.chips[4])  # Full house
         
         elif (len(dice_set) == 3):
             # 3 of a kind or 2 pairs
@@ -40,37 +42,35 @@ class Board:
                 ans.append(self.chips[1])
             elif (dice[1] == dice[2] and dice[2] == dice[3]):
                 ans.append(self.chips[1])
+            elif (dice[2] == dice[3] and dice[3] == dice[4]):
+                ans.append(self.chips[1])
             else:
                 ans.append(self.chips[0])
         
         elif (len(dice_set) == 4):
             # small straight or nothing (dice will always be 5 you can't check if its equal to a set of 4)
+            sorted_dice_set = sorted(dice_set)
             consecutive_count = 0
-            for num, index in enumerate(dice):
+            for num in range(len(sorted_dice_set) - 1):
                 # check if we have 4 consecutive numbers, if so append the chip
-                if (consecutive_count >= 4):
-                    ans.append(self.chips[2])
-                    break
-
-                if (index == dice[num + 1] - 1):
+                if sorted_dice_set[num] == sorted_dice_set[num + 1] - 1:
                     consecutive_count += 1
+                    if consecutive_count >= 3:  # 3 because we need 4 consecutive numbers
+                        ans.append(self.chips[2])
+                        break
                 else:
                     consecutive_count = 0
         
         elif (len(dice_set) == 5):
             # large straight or small straight or nothing
+            sorted_dice_set = sorted(dice_set)
             consecutive_count = 0
-            for num, index in enumerate(dice):
-
-                if (consecutive_count >= 5):
-                    ans.append(self.chips[6])
-                
-                if (consecutive_count >= 4):
-                    ans.append(self.chips[2])
-                    break
-
-                if (index == dice[num + 1] - 1):
+            for num in range(len(sorted_dice_set) - 1):
+                if sorted_dice_set[num] == sorted_dice_set[num + 1] - 1:
                     consecutive_count += 1
+                    if consecutive_count >= 4:  # 4 because we need 5 consecutive numbers
+                        ans.append(self.chips[6])
+                        break
                 else:
                     consecutive_count = 0
         

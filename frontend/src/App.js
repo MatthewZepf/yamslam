@@ -15,6 +15,7 @@ function App() {
         { id: 2, value: 20, color: '#00ff00' }, // Green chip
         { id: 3, value: 50, color: '#0000ff' }, // Blue chip
     ]);
+    const [chipResult, setChipResult] = useState(null); // State for chip result
 
     const saveGameState = async (newDice) => {
         try {
@@ -38,7 +39,6 @@ function App() {
             });
     };
     
-
     const fetchGames = async () => {
         try {
             const response = await axios.get(`${API_BASE_URL}/games`);
@@ -48,8 +48,19 @@ function App() {
         }
     };
 
-    const updateDiceValues = (newDice) => {
+    const handleRollDone = async (newDice) => {
         setDice(newDice);
+        try {
+            const response = await axios.get(`${API_BASE_URL}/api/board/chip-options`, { params: { 'dice[]': newDice } });
+            console.log(newDice);
+            setChipResult(response.data); // Update chip result state
+        } catch (error) {
+            console.error('Error fetching chip options:', error);
+        }
+    };
+
+    const updateChipResult = (result) => {
+        setChipResult(result);
     };
 
     useEffect(() => {
@@ -62,7 +73,7 @@ function App() {
                 Yamslam
             </div>
             <div className="App-body">
-            <DiceComponent dice={dice} isRolling={isRolling} updateDiceValues={updateDiceValues} />
+            <DiceComponent dice={dice} isRolling={isRolling} onRollDone={handleRollDone}/>
             <h2>Game History</h2>
             <ul>
                 {games.map((game) => (
@@ -71,16 +82,17 @@ function App() {
             </ul>
             <button onClick={handleChipClick}>handle chip click</button>
             <div className="chip-stack">
-                {chips.map((chip, index) => (
-                    <Chip
-                        key={chip.id}
-                        value={chip.value}
-                        color={chip.color}
-                        onClick={() => handleChipClick(chip.id)}
-                        style={{ top: `${index * -15}px`, zIndex: chips.length - index }}
-                    />
-                ))}
-            </div>
+                    {chips.map((chip, index) => (
+                        <Chip
+                            key={chip.id}
+                            value={chip.value}
+                            color={chip.color}
+                            onClick={() => handleChipClick(chip.id)}
+                            style={{ top: `${index * -15}px`, zIndex: chips.length - index }}
+                        />
+                    ))}
+                </div>
+                {chipResult && <div>You have a: {chipResult.name}</div>} {/* Display chip result */}
             </div>
             <div className="App-footer">
                 <div>Developed by Matthew Zepf</div>

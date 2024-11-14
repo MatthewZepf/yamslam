@@ -1,8 +1,11 @@
 import React, { useEffect, useRef, useState } from 'react';
 import ReactDice from 'react-dice-complete';
 import './Dice.css'; // Assuming you have your custom styles here
+import axios from 'axios';
 
-const DiceComponent = ({ dice, updateDiceValues }) => {
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
+
+const DiceComponent = ({ dice, onRollDone }) => {
     const reactDiceRefs = useRef([]);
     const [selectedDice, setSelectedDice] = useState([]);
     // set the roll time array to be 1, 1.5, 2, 2.5, 3 seconds
@@ -20,16 +23,16 @@ const DiceComponent = ({ dice, updateDiceValues }) => {
         });
     };
 
-    const rollDone = (index, value) => {
+    const rollDone = async (index, value) => {
         const newDice = [...dice];
         newDice[index] = value;
-        updateDiceValues(newDice);
-
+        onRollDone(newDice);
         setDotColors((prevColors) => {
             const newColors = [...prevColors];
             newColors[index] = value % 2 === 0 ? 'red' : 'white';
             return newColors;
         });
+
     };
 
     const rollSelected = () => {
